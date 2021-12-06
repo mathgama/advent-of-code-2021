@@ -1,0 +1,28 @@
+{
+  "name": "advent-of-code-2021",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "day01": "nodemon src/day01/day01.js",
+    "day02": "nodemon src/day02/index.js",
+    "day03": "nodemon src/day03/index.js",
+    "day04": "nodemon src/day04/index.js",
+    "day05": "nodemon src/day05/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mathgama/advent-of-code-2021.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mathgama/advent-of-code-2021/issues"
+  },
+  "homepage": "https://github.com/mathgama/advent-of-code-2021#readme",
+  "dependencies": {
+    "nodemon": "^2.0.15"
+  },
+  "type": "module"
+}
