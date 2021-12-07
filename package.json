@@ -5,10 +5,10 @@
   "main": "index.js",
   "scripts": {
     "day01": "nodemon src/day01/day01.js",
-    "day02": "nodemon src/day02/index.js",
-    "day03": "nodemon src/day03/index.js",
-    "day04": "nodemon src/day04/index.js",
-    "day05": "nodemon src/day05/index.js"
+    "day02": "nodemon src/day02/day02.js",
+    "day03": "nodemon src/day03/day03.js",
+    "day04": "nodemon src/day04/day04.js",
+    "day05": "nodemon src/day05/day05.js"
   },
   "repository": {
     "type": "git",

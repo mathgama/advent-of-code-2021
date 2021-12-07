@@ -1,6 +1,6 @@
-import { readInput } from '../utils.js'
+import { readInputNumeric } from '../utils.js'
 
-const input = readInput('./src/day01/input.txt')
+const input = readInputNumeric('./src/day01/input.txt')
 
 let counter = 0
 
@@ -10,7 +10,8 @@ for (let i = 0; i < input.length - 1; i++) {
     counter++
 }
 
-console.log('Day 01 - Part 1:', counter)
+console.log('-- Part one --')
+console.log('Counter:', counter)
 
 // Part 2
 counter = 0
@@ -24,4 +25,5 @@ for (let i = 0; i < input.length - 3; i++) {
   if (next_window > current_window) counter++
 }
 
-console.log('Day 01 - Part 2:', counter)
+console.log('-- Part two --')
+console.log('Counter:', counter)
