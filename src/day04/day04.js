@@ -106,5 +106,5 @@ const partTwo = () => {
   }
 }
 
-//partOne()
+partOne()
 partTwo()
