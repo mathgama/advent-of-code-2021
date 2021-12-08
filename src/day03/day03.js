@@ -74,3 +74,6 @@ const partTwo = () => {
   console.log('CO2 Scrubber Rating:', co2Rating)
   console.log('Life Support Rating:', oxyRating * co2Rating)
 }
+
+partOne()
+partTwo()
