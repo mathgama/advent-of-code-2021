@@ -93,11 +93,11 @@ const partTwo = () => {
     const drawnNumber = input.drawOrder.shift()
     let score = 0
 
-    input.boards.forEach((board, index, array) => {
-      score = markNumber(board, drawnNumber)
+    for (let i = input.boards.length - 1; i >= 0; i--) {
+      score = markNumber(input.boards[i], drawnNumber)
 
-      if (score > 0) array.splice(index, 1)
-    })
+      if (score > 0) input.boards.splice(i, 1)
+    }
 
     if (input.boards.length == 0) {
       console.log('-- Part two --')
