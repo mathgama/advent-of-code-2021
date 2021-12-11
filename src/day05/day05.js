@@ -12,8 +12,8 @@ const partOne = () => {
   input.forEach(line => {
     let [from, to] = line.split(' -> ')
     
-    from = from.split(',')
-    to = to.split(',')
+    from = from.split(',').map(numberString => parseInt(numberString))
+    to = to.split(',').map(numberString => parseInt(numberString))
     
     if (from[0] != to[0] && from[1] != to[1]) return 
     else if (to[0] < from[0]) [from[0], to[0]] = [to[0], from[0]]
