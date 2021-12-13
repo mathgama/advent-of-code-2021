@@ -8,7 +8,11 @@
     "day02": "nodemon src/day02/day02.js",
     "day03": "nodemon src/day03/day03.js",
     "day04": "nodemon src/day04/day04.js",
-    "day05": "nodemon src/day05/day05.js"
+    "day05": "nodemon src/day05/day05.js",
+    "day06": "nodemon src/day06/day06.js",
+    "day07": "nodemon src/day07/day07.js",
+    "day08": "nodemon src/day08/day08.js",
+    "day09": "nodemon src/day09/day09.js"
   },
   "repository": {
     "type": "git",
