@@ -26,4 +26,47 @@ const partOne = () => {
   console.log('Result:', result)
 }
 
+const mapBasin = (input, i, j, mappedCoords) => {
+  if (!input[i]) return 0
+  if (!input[i][j]) return 0
+  if (input[i][j] == '9') return 0
+  if (mappedCoords.has("" + i + j)) return 0
+
+  mappedCoords.add("" + i + j)
+
+  return 1
+    + mapBasin(input, i, j+1, mappedCoords)
+    + mapBasin(input, i+1, j, mappedCoords)
+    + mapBasin(input, i, j-1, mappedCoords)
+    + mapBasin(input, i-1, j, mappedCoords)
+}
+
+const partTwo = () => {
+  let result = 0
+
+  const mappedCoords = new Set()
+  const basinSizes = []
+
+  for (let i = 0; i < input.length; i++) {
+    for (let j = 0; j < input[i].length; j++) {
+      let size = 0
+      
+      if (!mappedCoords.has("" + i + j))
+        size = mapBasin(input, i, j, mappedCoords)
+
+      if (size > 0)
+        basinSizes.push(size)
+    }
+  }
+
+  basinSizes.sort((a, b) => b - a)
+  console.log(basinSizes)
+
+  result = basinSizes[0] * basinSizes[1] * basinSizes[2]
+
+  console.log('-- Part two --')
+  console.log('Result:', result)
+}
+
 partOne()
+partTwo()
