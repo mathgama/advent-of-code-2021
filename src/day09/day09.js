@@ -60,7 +60,6 @@ const partTwo = () => {
   }
 
   basinSizes.sort((a, b) => b - a)
-  console.log(basinSizes)
 
   result = basinSizes[0] * basinSizes[1] * basinSizes[2]
 
