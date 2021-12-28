@@ -40,7 +40,7 @@ const navigateComplex = (connections, visitTwice, minorVisitedTwice, currentCave
 
   path.push(currentCave)
 
-  const duplicate = paths.filter((element) => arraysEqual(element, path))
+  const duplicate = paths.filter((element) => arraysEqual(element.slice(0, path.length), path))
   if (duplicate.length > 0) return
 
   if (currentCave == 'end') {
@@ -53,13 +53,13 @@ const navigateComplex = (connections, visitTwice, minorVisitedTwice, currentCave
 
     if (destination == 'start') return
     if (destination == destination.toLowerCase() && path.includes(destination)) {
-      if (!minorVisitedTwice && visitTwice)
+      if (!visittedTwice && visitTwice)
         visittedTwice = true
       else
         return
     }
 
-    if(!minorVisitedTwice)
+    if (!visittedTwice)
       navigateComplex(connections, true, visittedTwice, destination, path, paths)
 
     navigateComplex(connections, false, visittedTwice, destination, path, paths)
