@@ -11,16 +11,35 @@ const initializeGrid = (size) => {
   return grid
 }
 
+const processInput = () => {
+  const paper = initializeGrid(1500)
+  const folds = []
+
+  originalInput.forEach(line => {
+    if (line == '') return
+
+    if (line.substring(0, 4) != 'fold') {
+      const [col, row] = line.split(',')
+      paper[row][col] = true
+    } else {
+      const [foldAxis, foldLine] = line.split(' ').pop().split('=')
+      folds.push({axis: foldAxis, line: foldLine})
+    }
+  })
+
+  return [paper, folds]
+}
+
 const foldPaper = (paper, fold) => {
-  const iStart = fold.axis == 'y' ? 0 : fold.line
-  const jStart = fold.axis == 'y' ? fold.line : 0
+  const iStart = fold.axis == 'x' ? 0 : +fold.line + 1
+  const jStart = fold.axis == 'x' ? +fold.line + 1 : 0
 
   for (let i = iStart; i < paper.length; i++) {
     for (let j = jStart; j < paper.length; j++) {
-      const iDest = fold.axis == 'y' ? i : fold.line - (i - fold.line)
-      const jDest = fold.axis == 'y' ? fold.line - (j - fold.line) : j
+      const iDest = fold.axis == 'x' ? i : fold.line - (i - fold.line)
+      const jDest = fold.axis == 'x' ? fold.line - (j - fold.line) : j
 
-      if (iDest < 0 || jDest < 0) return
+      if (iDest < 0 || jDest < 0) break
 
       paper[iDest][jDest] = paper[i][j] || paper[iDest][jDest]
       paper[i][j] = false
@@ -29,23 +48,9 @@ const foldPaper = (paper, fold) => {
 }
 
 const partOne = () => {
-  const paper = initializeGrid(1500)
-  const folds = []
+  const [paper, folds] = processInput()
 
-  originalInput.forEach(line => {
-    if (line == '') return
-
-    if (line.substring(0, 4) != 'fold') {
-      const [x, y] = line.split(',')
-      paper[x][y] = true
-    } else {
-      const [foldAxis, foldLine] = line.split(' ').pop().split('=')
-      folds.push({axis: foldAxis, line: foldLine})
-    }
-  })
-
-  const fold = folds[0]
-  foldPaper(paper, fold)
+  foldPaper(paper, folds[0])
 
   const result = paper.reduce((acc, curr) => acc + curr.filter(el => el).length, 0)
 
@@ -53,4 +58,23 @@ const partOne = () => {
   console.log('Result:', result)
 }
 
+const partTwo = () => {
+  const [paper, folds] = processInput()
+
+  folds.forEach(fold => foldPaper(paper, fold))
+
+  console.log('-- Part two --')
+  
+  for (let i = 0; i < 6; i++) {
+    let line = ''
+
+    for (let j = 0; j < 40; j++) {
+      line += paper[i][j] ? '#' : '.'
+    }
+
+    console.log(line)
+  }
+}
+
 partOne()
+partTwo()
