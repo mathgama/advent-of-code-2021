@@ -2,13 +2,9 @@ import { readInputString } from '../utils.js'
 
 const originalInput = readInputString('./src/day15/input.txt')
 
-const getNextNode = (currentNode, unvisited) => {
-  if (!currentNode) 
-    return unvisited[0]
-  else {
-    unvisited.sort((a, b) => a.distance - b.distance)
-    return unvisited[0]
-  }
+const getNextNode = (unvisited) => {
+  unvisited.sort((a, b) => a.distance - b.distance)
+  return unvisited.shift()
 }
 
 const getUnvisitedNeighbors = (currentNode, unvisited) => {
@@ -59,7 +55,7 @@ const partOne = () => {
   let node = unvisited[0]
 
   while (unvisited.length > 0) {
-    node = getNextNode(node, unvisited)
+    node = getNextNode(unvisited)
     const unvisitedNeighbors = getUnvisitedNeighbors(node, unvisited)
 
     for (const neighbor of unvisitedNeighbors) {
@@ -74,7 +70,11 @@ const partOne = () => {
     visited.push(node)
   }
 
+  visited.sort((a, b) => (b.i + b.j) - (a.i + a.j))
+  const finalNode = visited[0]
+
   console.log('-- Part one --')
+  console.log('Result:', finalNode.distance)
 }
 
 partOne()
