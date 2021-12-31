@@ -27,10 +27,7 @@ const getUnvisitedNeighbors = (currentNode, unvisited) => {
   return unvisitedNeighbors
 }
 
-const partOne = () => {
-  let input = []
-  originalInput.forEach(line => input.push(line.split('')))
-
+const calculateDistance = (input) => {
   const visited = []
   const unvisited = []
 
@@ -71,10 +68,53 @@ const partOne = () => {
   }
 
   visited.sort((a, b) => (b.i + b.j) - (a.i + a.j))
-  const finalNode = visited[0]
+  return visited[0].distance
+}
+
+const partOne = () => {
+  let input = []
+  originalInput.forEach(line => input.push(line.split('')))
+
+  const distance = calculateDistance(input)
 
   console.log('-- Part one --')
-  console.log('Result:', finalNode.distance)
+  console.log('Result:', distance)
+}
+
+const partTwo = () => {
+  let input = []
+  originalInput.forEach(line => input.push(line.split('').map(el => +el)))
+
+  for (let i = 0; i < input.length; i++) {
+    const lineLength = input[i].length
+
+    for (let n = 1; n <= 4; n++) {
+      for (let j = 0; j < lineLength; j++) {
+        let value = input[i][j] + n
+        if (value > 9) value -= 9
+        input[i].push(value)
+      } 
+    }
+  }
+
+  const colLength = input.length
+  for (let n = 1; n <= 4; n++) {
+    for (let i = 0; i < colLength; i++) {
+      const newLine = []
+      for (let j = 0; j < input[i].length; j++) {
+        let value = input[i][j] + n
+        if (value > 9) value -= 9
+        newLine.push(value)
+      }
+      input.push(newLine)
+    }
+  }
+
+  const distance = calculateDistance(input)
+
+  console.log('-- Part two --')
+  console.log('Result:', distance)
 }
 
 partOne()
+partTwo()
