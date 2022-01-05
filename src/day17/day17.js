@@ -39,4 +39,50 @@ const partOne = () => {
   console.log('Result:', validTops[validTops.length - 1])
 }
 
+const partTwo = () => {
+  const [x1, x2] = originalInput[0].split('x=')[1].split(',')[0].split('..')
+  const [y1, y2] = originalInput[0].split('y=')[1].split('..')
+
+  const result = []
+
+  let step
+
+  for (let xAccel = 1; xAccel < 145; xAccel++) {
+    let x = 0
+    step = 0
+
+    while (true) {
+      step++
+
+      if (xAccel > step)
+        x += xAccel - (step - 1)
+
+      if (xAccel > step && x < x1) continue
+      else if (x < x1) break
+      else if (x > x2) break
+
+      let doNextStep = false
+
+      for (let yAccel = -10; yAccel < 300; yAccel ++) {
+        let y = 0
+        
+        y = yAccel * step - nthTriangular(step - 1)
+
+        if (y > y1) doNextStep = true
+        
+        if (y <= y2 && y >= y1) {
+          if (result.filter(el => el[0] == xAccel & el[1] == yAccel).length == 0)
+            result.push([xAccel, yAccel])
+        }
+      }
+
+      if (!doNextStep) break
+    }
+  }
+
+  console.log('-- Part two --')
+  console.log('Result:', result.length)
+}
+
 partOne()
+partTwo()
