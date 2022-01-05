@@ -47,7 +47,7 @@ const partTwo = () => {
 
   let step
 
-  for (let xAccel = 1; xAccel < 145; xAccel++) {
+  for (let xAccel = 1; xAccel < 179; xAccel++) {
     let x = 0
     step = 0
 
@@ -63,7 +63,7 @@ const partTwo = () => {
 
       let doNextStep = false
 
-      for (let yAccel = -10; yAccel < 300; yAccel ++) {
+      for (let yAccel = -100; yAccel < 100; yAccel ++) {
         let y = 0
         
         y = yAccel * step - nthTriangular(step - 1)
@@ -76,7 +76,8 @@ const partTwo = () => {
         }
       }
 
-      if (!doNextStep) break
+      if (!doNextStep) 
+        break
     }
   }
 
