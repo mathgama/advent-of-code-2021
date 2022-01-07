@@ -92,7 +92,7 @@ const reduceNumber = (array) => {
 }
 
 const calculateMagnitude = (array) => {
-  
+  return eval(array.join('').replaceAll("[", "(3*").replaceAll(",", " + 2*").replaceAll("]", ")"))
 }
 
 const partOne = () => {
@@ -111,7 +111,7 @@ const partOne = () => {
     } while (true)
   })
 
-  const result = eval(expression.join('').replaceAll("[", "(3*").replaceAll(",", " + 2*").replaceAll("]", ")"))
+  const result = calculateMagnitude(expression)
 
   console.log('-- Part one --')
   console.log('Result:', result)
