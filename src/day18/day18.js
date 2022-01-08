@@ -117,4 +117,32 @@ const partOne = () => {
   console.log('Result:', result)
 }
 
+const partTwo = () => {
+  const input = [...originalInput]
+
+  let result = 0
+
+  for (let i = 0; i < input.length; i++) {
+    let expression = input[i]
+
+    for (let j = 0; j < input.length; j++) {
+      if (i == j) continue
+
+      let sum = add(expression, input[j])
+
+      do {
+        if (!reduceNumber(sum)) break
+      } while (true)
+
+      const magnitude = calculateMagnitude(sum)
+
+      if (magnitude > result) result = magnitude
+    }
+  }
+
+  console.log('-- Part two --')
+  console.log('Result:', result)
+}
+
 partOne()
+partTwo()
