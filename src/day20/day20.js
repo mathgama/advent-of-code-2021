@@ -3,8 +3,8 @@ import { readInputString } from '../utils.js'
 const originalInput = readInputString('./src/day20/input.txt')
 
 const initializeGrid = (size) => {
-  const grid = new Array(size + 6)
-  for (let i = 0; i < grid.length; i++) grid[i] = new Array(size + 6).fill('.')
+  const grid = new Array(size + 102)
+  for (let i = 0; i < grid.length; i++) grid[i] = new Array(size + 102).fill('.')
   //grid.forEach(cell => cell = new Array(size + 4).fill('.'))
   return grid
 }
@@ -19,7 +19,7 @@ const processInput = (input) => {
     if (!grid) grid = initializeGrid(line.length)
 
     for (let i = 0; i < line.length; i++) {
-      grid[index+3][i+3] = line[i]
+      grid[index+51][i+51] = line[i]
     }
   })
 
@@ -94,4 +94,18 @@ const partOne = () => {
   console.log('Result:', result)
 }
 
+const partTwo = () => {
+  let [algorithm, grid] = processInput([...originalInput])
+
+  for (let i = 0; i < 50; i++) {
+    grid = imageEnhancement(algorithm, grid)
+  }
+
+  const result = countPixels(grid)
+
+  console.log('-- Part two --')
+  console.log('Result:', result)
+}
+
 partOne()
+partTwo()
