@@ -1,4 +1,5 @@
 import { readInputString } from '../utils.js'
+import { MinPriorityQueue } from 'datastructures-js'
 
 const originalInput = readInputString('./src/day23/input.txt')
 
@@ -44,7 +45,7 @@ const calculateCost = (state, origin, destiny) => {
   return moves * cost[pod]
 }
 
-const getPossibleMoves = (state) => {
+const getPossibleMoves = (state, cost) => {
   const possibleMoves = []
   let newState
 
@@ -60,17 +61,17 @@ const getPossibleMoves = (state) => {
           state[j] == "." ||
           (doors.includes(j) && !state[j].some(el => el != state[j][0]))
          ) {
-        const cost = calculateCost(state, doorIndex, j);
-        if (cost == 0) continue
+        const moveCost = calculateCost(state, doorIndex, j);
+        if (moveCost == 0) continue
 
         newState = JSON.parse(JSON.stringify(state))
         const pod = newState[doorIndex].shift()
-        newState[doorIndex].unshift('.')
+        //newState[doorIndex].unshift('.')
         doors.includes(j) ? newState[j].shift(pod) : newState[j] = pod
         
         possibleMoves.push({
           state: newState,
-          cost: cost
+          cost: cost + moveCost
         })
       }
     }
@@ -85,8 +86,8 @@ const getPossibleMoves = (state) => {
     const doorIndex = targetRoom[value]
 
     if (!state[doorIndex].some(el => el != value)) {
-      const cost = calculateCost(state, i, doorIndex)
-      if (cost == 0) continue
+      const moveCost = calculateCost(state, i, doorIndex)
+      if (moveCost == 0) continue
 
       newState = JSON.parse(JSON.stringify(state))
       const pod = newState[i]
@@ -95,7 +96,7 @@ const getPossibleMoves = (state) => {
       
       possibleMoves.push({
         state: newState,
-        cost: cost
+        cost: cost + moveCost
       })
     }
   }
@@ -104,35 +105,44 @@ const getPossibleMoves = (state) => {
 }
 
 const isFinalState = (state) => {
-  console.log(state.flat(2).join(''))
   for (let i = 0; i < doors.length; i++) {
     const door = doors[i]
-    if (state[door].some(el => el != amphipods[i]))
+    if (state[door].length < 2 || state[door].some(el => el != amphipods[i]))
       return false
   }
   return true
 }
 
 const shortestPath = (initialHallway) => {
-  let queue = []
-  const seen = new Set()
+  const q = new MinPriorityQueue()
+  const seen = new Map()
 
-  queue.push({ state: initialHallway, cost: 0 })
+  q.enqueue({ state: initialHallway, cost: 0 }, 0)
 
-  while(queue.length > 0) {
-    queue.sort((a, b) => b.cost - a.cost)
+  while(q.size()) {
+    //queue.sort((a, b) => a.cost - b.cost)
+    //const {state, cost} = q.shift()
 
-    const {state, cost} = queue.shift()
+    const cur = q.dequeue()
+    const [state, cost] = [cur.element.state, cur.element.cost]
+
     const stateString = state.flat(2).join('')
 
-    if (!seen.has(stateString)) {
-      seen.add(stateString)
+    const seenCost = seen.get(stateString)
+
+    //if (!seen.has(stateString)) {
+    if (!seenCost || cost < seenCost) {
+      seen.set(stateString, cost)
 
       if(isFinalState(state))
         return cost
       else {
-        const possibleMoves = getPossibleMoves(state)
-        queue = queue.concat(possibleMoves)
+        getPossibleMoves(state, cost).forEach(move => {
+          /* const moveString = move.state.flat(2).join('')
+          if (!seen.has(moveString)) q.enqueue(move, move.cost) */
+          q.enqueue(move, move.cost)
+        })
+        /* q = q.concat(possibleMoves) */
       }
     }
   }
@@ -155,7 +165,9 @@ const partOne = () => {
   })
 
   const result = shortestPath(hallway)
-  console.log(result)
+  
+  console.log('-- Part one --')
+  console.log('Result:', result)
 }
 
 partOne()
