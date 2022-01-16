@@ -59,15 +59,14 @@ const getPossibleMoves = (state, cost) => {
 
       if (
           state[j] == "." ||
-          (doors.includes(j) && !state[j].some(el => el != state[j][0]))
+          (doors.includes(j) && !state[j].some(el => el != state[doorIndex][0]))
          ) {
         const moveCost = calculateCost(state, doorIndex, j);
         if (moveCost == 0) continue
 
         newState = JSON.parse(JSON.stringify(state))
         const pod = newState[doorIndex].shift()
-        //newState[doorIndex].unshift('.')
-        doors.includes(j) ? newState[j].shift(pod) : newState[j] = pod
+        doors.includes(j) ? newState[j].unshift(pod) : newState[j] = pod
         
         possibleMoves.push({
           state: newState,
@@ -115,34 +114,26 @@ const isFinalState = (state) => {
 
 const shortestPath = (initialHallway) => {
   const q = new MinPriorityQueue()
-  const seen = new Map()
+  const seen = new Set()
 
   q.enqueue({ state: initialHallway, cost: 0 }, 0)
 
   while(q.size()) {
-    //queue.sort((a, b) => a.cost - b.cost)
-    //const {state, cost} = q.shift()
-
     const cur = q.dequeue()
     const [state, cost] = [cur.element.state, cur.element.cost]
 
     const stateString = state.flat(2).join('')
 
-    const seenCost = seen.get(stateString)
-
-    //if (!seen.has(stateString)) {
-    if (!seenCost || cost < seenCost) {
-      seen.set(stateString, cost)
+    if (!seen.has(stateString)) {
+      console.log(cost)
+      seen.add(stateString)
 
       if(isFinalState(state))
         return cost
       else {
         getPossibleMoves(state, cost).forEach(move => {
-          /* const moveString = move.state.flat(2).join('')
-          if (!seen.has(moveString)) q.enqueue(move, move.cost) */
           q.enqueue(move, move.cost)
         })
-        /* q = q.concat(possibleMoves) */
       }
     }
   }
