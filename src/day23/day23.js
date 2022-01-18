@@ -3,6 +3,8 @@ import { MinPriorityQueue } from 'datastructures-js'
 
 const originalInput = readInputString('./src/day23/input.txt')
 
+let roomMaximumSize
+
 const doors = [2, 4, 6, 8]
 const amphipods = ['A', 'B', 'C', 'D']
 
@@ -20,16 +22,37 @@ const cost = {
   'D': 1000,
 }
 
+const processInput = () => {
+  const input = [...originalInput]
+  input.shift()
+  input.shift()
+  input.pop()
+
+  const hallway = new Array(11).fill('.')
+
+  input.forEach(line => {
+    line.substring(3, 10).split('#').forEach((pod, index) => {
+      const roomIndex = doors[index]
+      if(hallway[roomIndex] == '.') hallway[roomIndex] = []
+      hallway[roomIndex].push(pod)
+    })
+  })
+
+  return hallway
+}
+
 const calculateCost = (state, origin, destiny) => {
   let moves = 0
 
   const pod = doors.includes(origin) ? state[origin][0] : state[origin]
 
   if (doors.includes(origin)) // moving out of a room
-    moves += state[origin].length === 1 ? 2 : 1 // cost to get to the door
+    moves += roomMaximumSize + 1 - state[origin].length
+    //moves += state[origin].length === 1 ? 2 : 1 // cost to get to the door
 
   if (doors.includes(destiny)) // moving into a room
-    moves += state[destiny].length === 1 ? 1 : 2
+    moves += roomMaximumSize - state[destiny].length
+    //moves += state[destiny].length === 1 ? 1 : 2
 
   const diff = destiny - origin
 
@@ -106,7 +129,7 @@ const getPossibleMoves = (state, cost) => {
 const isFinalState = (state) => {
   for (let i = 0; i < doors.length; i++) {
     const door = doors[i]
-    if (state[door].length < 2 || state[door].some(el => el != amphipods[i]))
+    if (state[door].length < roomMaximumSize || state[door].some(el => el != amphipods[i]))
       return false
   }
   return true
@@ -115,6 +138,8 @@ const isFinalState = (state) => {
 const shortestPath = (initialHallway) => {
   const q = new MinPriorityQueue()
   const seen = new Set()
+
+  const previous = new Map()
 
   q.enqueue({ state: initialHallway, cost: 0 }, 0)
 
@@ -125,14 +150,26 @@ const shortestPath = (initialHallway) => {
     const stateString = state.flat(2).join('')
 
     if (!seen.has(stateString)) {
-      console.log(cost)
+      //console.log(stateString, cost)
+
       seen.add(stateString)
 
-      if(isFinalState(state))
+      if(isFinalState(state)) {
+        let curr = {prevState: stateString, cost: cost}
+        do {
+          console.log(curr.prevState, curr.cost)
+          const prev = previous.get(curr.prevState)
+          curr = prev
+        } while (curr)
+
         return cost
+      }
       else {
         getPossibleMoves(state, cost).forEach(move => {
           q.enqueue(move, move.cost)
+
+          if (!previous.get(move.state.flat(2).join('')))
+            previous.set(move.state.flat(2).join(''), {prevState: stateString, cost: cost})
         })
       }
     }
@@ -140,25 +177,47 @@ const shortestPath = (initialHallway) => {
 }
 
 const partOne = () => {
-  const input = [...originalInput]
-  input.shift()
-  input.shift()
-  input.pop()
+  const input = processInput()
 
-  const hallway = new Array(11).fill('.')
+  roomMaximumSize = 2
 
-  input.forEach(line => {
-    line.substring(3, 10).split('#').forEach((pod, index) => {
-      const roomIndex = doors[index]
-      if(hallway[roomIndex] == '.') hallway[roomIndex] = []
-      hallway[roomIndex].push(pod)
-    })
-  })
-
-  const result = shortestPath(hallway)
+  const result = shortestPath(input)
   
   console.log('-- Part one --')
   console.log('Result:', result)
 }
 
-partOne()
+const partTwo = () => {
+  const input = processInput()
+
+  input.forEach((room, index) => {
+    switch (index) {
+      case 2:
+        room.splice(1, 0, 'D')
+        room.splice(1, 0, 'D')
+        break
+      case 4:
+        room.splice(1, 0, 'B')
+        room.splice(1, 0, 'C')
+        break
+      case 6:
+        room.splice(1, 0, 'A')
+        room.splice(1, 0, 'B')
+        break
+      case 8:
+        room.splice(1, 0, 'C')
+        room.splice(1, 0, 'A')
+        break
+    }
+  })
+
+  roomMaximumSize = 4
+
+  const result = shortestPath(input)
+  
+  console.log('-- Part two --')
+  console.log('Result:', result)
+}
+
+//partOne()
+partTwo()
