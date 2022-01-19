@@ -76,13 +76,20 @@ const getPossibleMoves = (state, cost) => {
   for (let i = 0; i < doors.length; i++) {
     const doorIndex = doors[i]
     if (state[doorIndex].length === 0) continue
+    if (doorIndex == targetRoom[state[doorIndex][0]] &&
+        state[doorIndex].every(el => el == state[doorIndex][0]))
+      continue
 
     for (let j = 0; j < state.length; j++) {
       if (j == doorIndex) continue // do not move to the same place
 
       if (
           state[j] == "." ||
-          (doors.includes(j) && !state[j].some(el => el != state[doorIndex][0]))
+          (
+            doors.includes(j) && 
+            !state[j].some(el => el != state[doorIndex][0]) &&
+            j == targetRoom[state[doorIndex][0]]
+          )
          ) {
         const moveCost = calculateCost(state, doorIndex, j);
         if (moveCost == 0) continue
@@ -135,6 +142,16 @@ const isFinalState = (state) => {
   return true
 }
 
+const createStateString = (state) => {
+  let result = ''
+  for (let i = 0; i < state.length; i++) {
+    result += Array.isArray(state[i]) 
+      ? '<' + state[i].join('') + '>'
+      : state[i]
+  }
+  return result
+}
+
 const shortestPath = (initialHallway) => {
   const q = new MinPriorityQueue()
   const seen = new Set()
@@ -145,13 +162,12 @@ const shortestPath = (initialHallway) => {
 
   while(q.size()) {
     const cur = q.dequeue()
-    const [state, cost] = [cur.element.state, cur.element.cost]
+    const [state, cost] =   [cur.element.state, cur.element.cost]
 
-    const stateString = state.flat(2).join('')
+    //const stateString = state.flat(2).join('')
+    const stateString = createStateString(state)
 
     if (!seen.has(stateString)) {
-      //console.log(stateString, cost)
-
       seen.add(stateString)
 
       if(isFinalState(state)) {
@@ -164,12 +180,11 @@ const shortestPath = (initialHallway) => {
 
         return cost
       }
-      else {
+      else {          
         getPossibleMoves(state, cost).forEach(move => {
           q.enqueue(move, move.cost)
 
-          if (!previous.get(move.state.flat(2).join('')))
-            previous.set(move.state.flat(2).join(''), {prevState: stateString, cost: cost})
+          previous.set(createStateString(move.state), {prevState: stateString, cost: cost})
         })
       }
     }
@@ -219,5 +234,5 @@ const partTwo = () => {
   console.log('Result:', result)
 }
 
-//partOne()
+partOne()
 partTwo()
