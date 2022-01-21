@@ -3,7 +3,7 @@ import { readInputString } from '../utils.js'
 const originalInput = readInputString('./src/day24/input.txt')
 
 const partOne = () => {
-  input = [...originalInput]
+  const input = [...originalInput]
 
   let w = 0, x = 0, y = 0, z = 0
   let varX, varY, varZ
