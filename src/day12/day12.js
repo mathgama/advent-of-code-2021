@@ -40,11 +40,13 @@ const navigateComplex = (connections, visitTwice, minorVisitedTwice, currentCave
 
   path.push(currentCave)
 
-  const duplicate = paths.filter((element) => arraysEqual(element.slice(0, path.length), path))
-  if (duplicate.length > 0) return
+  //const duplicate = paths.filter((element) => arraysEqual(element.slice(0, path.length), path))
+  //if (duplicate.length > 0) return
+
+  if (paths.has(path.join('-'))) return
 
   if (currentCave == 'end') {
-    paths.push(path)
+    paths.add(path.join('-'))
     return
   }
 
@@ -90,7 +92,7 @@ const partOne = () => {
 const partTwo = () => {
   const connections = processInput(originalInput)
 
-  let paths = []
+  let paths = new Set()
   navigateComplex(connections, false, false, 'start', [], paths)
 
   //paths.sort()
@@ -99,7 +101,7 @@ const partTwo = () => {
   //console.log(paths)
 
   console.log('-- Part two --')
-  console.log('Result:', paths.length)
+  console.log('Result:', paths.size)
 }
 
 partOne()
